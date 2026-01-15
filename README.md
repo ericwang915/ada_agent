@@ -153,6 +153,20 @@ response = agent.chat("What can you do?")
 print(response)
 ```
 
+### Multi-turn Conversation
+
+The agent automatically maintains conversation history.
+
+```python
+# Turn 1
+response = agent.chat("I'm planning a trip to Mars.")
+print(response)
+
+# Turn 2 (Agent remembers context)
+response = agent.chat("How long does it take to get there?")
+print(response)
+```
+
 ## 🎬 Demos
 
 Check the `examples/` directory for ready-to-run scripts:
