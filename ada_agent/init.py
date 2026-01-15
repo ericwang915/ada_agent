@@ -40,12 +40,38 @@ def init(project_path="."):
         with open(memory_file, "w") as f:
             f.write("{}") # Empty JSON object
             
-    # Skills (Sample Skill)
-    skill_dir = os.path.join(context_dir, "skills", "hello_world")
-    os.makedirs(skill_dir, exist_ok=True)
+    # Skills
+    # Try to copy from examples/context/skills if available (local dev mode)
+    # This path is relative to ada_agent/init.py -> ../examples/context/skills
+    pkg_dir = os.path.dirname(os.path.abspath(__file__))
+    repo_root = os.path.dirname(pkg_dir)
+    examples_skills_dir = os.path.join(repo_root, "examples", "context", "skills")
     
-    skill_md = os.path.join(skill_dir, "SKILL.md")
-    if not os.path.exists(skill_md):
+    target_skills_dir = os.path.join(context_dir, "skills")
+    
+    if os.path.exists(examples_skills_dir) and os.path.isdir(examples_skills_dir):
+        print(f"  - Copying example skills from {examples_skills_dir}...")
+        try:
+            # Iterate and copy each category/skill to avoid blowing away existing directory if any
+            for item in os.listdir(examples_skills_dir):
+                s = os.path.join(examples_skills_dir, item)
+                d = os.path.join(target_skills_dir, item)
+                if os.path.isdir(s):
+                    if os.path.exists(d):
+                        print(f"    - Skipping {item} (already exists)")
+                    else:
+                        shutil.copytree(s, d)
+                        print(f"    - Copied {item}")
+        except Exception as e:
+            print(f"    - Error copying skills: {e}")
+            
+    # Always ensure at least hello_world exists if nothing else was copied
+    # (Or just add it anyway as a demo of how to write one)
+    skill_dir = os.path.join(target_skills_dir, "hello_world")
+    if not os.path.exists(skill_dir):
+        os.makedirs(skill_dir, exist_ok=True)
+        
+        skill_md = os.path.join(skill_dir, "SKILL.md")
         with open(skill_md, "w") as f:
             f.write("""---
 name: hello_world
@@ -58,10 +84,11 @@ Instructions:
 1. Run the python script `hello.py` to say hello to the user.
 """)
 
-    skill_py = os.path.join(skill_dir, "hello.py")
-    if not os.path.exists(skill_py):
+        skill_py = os.path.join(skill_dir, "hello.py")
         with open(skill_py, "w") as f:
-            f.write("print('Hello from your custom skill!')\n")
+            f.write("print('Hello from your custom skill!')\\n")
+    else:
+         print("  - hello_world skill already exists")
             
     # Env File
     env_file = os.path.join(application_dir, ".env")

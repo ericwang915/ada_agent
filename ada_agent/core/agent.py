@@ -32,19 +32,8 @@ class Agent:
                 print(f"[DEBUG] RAG initialized with knowledge path: {knowledge_path}")
         
         # Initialize Skills
-        # Logic: If skills_dirs provided, use them. 
-        # But we also want the DEFAULT skills usually?
-        # User request: "fallback ... but can append".
-        # So we should probably ALWAYS include default skills unless explicitly disabled?
-        # Let's verify: "specify memory and skills... if no, we have fall back ... but can append".
-        # This implies: Defaults are always there (or fallback), and user ones are appended.
-        
-        # Calculate Default Dirs
-        core_dir = os.path.dirname(os.path.abspath(__file__)) # ada_agent/core
-        pkg_root = os.path.dirname(core_dir) # ada_agent
-        default_skills_dir = os.path.join(pkg_root, "skills")
-        
-        self.skills_dirs = [default_skills_dir]
+        # We rely on the user to provide skills_dirs (e.g. from init or manual setup)
+        self.skills_dirs = []
         if skills_dirs:
             if isinstance(skills_dirs, str):
                  self.skills_dirs.append(skills_dirs)

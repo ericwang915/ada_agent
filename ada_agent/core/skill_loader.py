@@ -47,10 +47,8 @@ class SkillRegistry:
         # Let's make Registry dumb: just holds dirs.
         # But we need to calculate default if nothing passed?
         if not self.skills_dirs:
-             # Default to 'skills' directory relative to the package root
-            core_dir = os.path.dirname(os.path.abspath(__file__))
-            pkg_root = os.path.dirname(core_dir)
-            self.skills_dirs.append(os.path.join(pkg_root, "skills"))
+             # No default skills dir anymore
+             pass
 
     def get_categories(self) -> list[CategoryMetadata]:
         """Returns a list of CategoryMetadata objects."""
