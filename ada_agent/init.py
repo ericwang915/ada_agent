@@ -65,9 +65,3 @@ def init(project_path="."):
         print(f"  - Created {env_file} (Please edit this file to add your API keys)")
 
     print("\nInitialization complete! You can now start your agent with this context.")
-    print("Example usage:\n")
-    print("1. Edit .env to set your API Key.")
-    print("2. Run your agent script:\n")
-    print("from ada_agent import Agent")
-    print("# Ensure configured API_KEY is set in environment")
-    print("agent = Agent(provider=provider)")
