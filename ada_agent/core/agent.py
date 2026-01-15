@@ -9,6 +9,36 @@ from .llm.base import LLMProvider
 
 class Agent:
     def __init__(self, provider: LLMProvider, memory_path: str = None, skills_dirs: list[str] = None, knowledge_path: str = None, persona_path: str = None, verbose=False, show_full_context=False, max_chat_history=10):
+        # 1. Automatic Context Initialization (Simplification)
+        # If no paths are provided, default to ./context in the current working directory.
+        if memory_path is None and skills_dirs is None and knowledge_path is None and persona_path is None:
+            cwd = os.getcwd()
+            context_dir = os.path.join(cwd, "context")
+            
+            # Auto-init if missing
+            if not os.path.exists(context_dir):
+                if verbose:
+                    print(f"[Agent] No context found. Initializing default context in {context_dir}...")
+                try:
+                    # Local import to avoid circular dependency (ada_agent -> core.agent -> ada_agent)
+                    from ...init import init
+                    init(cwd)
+                except ImportError:
+                    # Fallback if relative import fails or structure is different
+                    try:
+                        from ada_agent.init import init
+                        init(cwd)
+                    except ImportError:
+                         print("[Agent] Warning: Could not auto-initialize context. Please run 'ada_agent.init()' manually.")
+            
+            # Set defaults
+            if verbose: print(f"[Agent] Using default context at {context_dir}")
+            
+            memory_path = os.path.join(context_dir, "memory", "memory.json")
+            knowledge_path = os.path.join(context_dir, "knowledge")
+            skills_dirs = [os.path.join(context_dir, "skills")]
+            persona_path = os.path.join(context_dir, "persona")
+
         self.provider = provider
         self.messages = []
         self.verbose = verbose
