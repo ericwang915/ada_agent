@@ -68,26 +68,19 @@ The demo scripts will automatically initialize a default `context` (skills, memo
 
 ## 🛠️ Configuration
 
-When you first run the agent (or one of the demo scripts), it will automatically create a `.env` file in your current directory if one doesn't exist.
+The agent requires an API key. You can provide this in two ways:
 
-Open `.env` and fill in your API key:
+1.  **Environment Variables** (Recommended):
+    ```bash
+    export DEEPSEEK_API_KEY="sk-..."
+    ```
+2.  **.env File**: The agent will essentially create a template `.env` file for you on first run if you wish to use it, but you are free to set variables in your shell instead.
 
-```ini
-# ADA Agent Configuration
-# -----------------------
-
-# LLM Provider Configuration
-# Uncomment and fill in the key for your chosen provider
-
-# OpenAI
-# OPENAI_API_KEY=sk-your-openai-key-here
-
-# DeepSeek
-DEEPSEEK_API_KEY=sk-your-deepseek-key-here
-
-# Google Gemini
-# GEMINI_API_KEY=your-gemini-key-here
-```
+Supported Variables:
+*   `DEEPSEEK_API_KEY`
+*   `OPENAI_API_KEY`
+*   `GEMINI_API_KEY`
+*   `XAI_API_KEY` (Grok)
 
 ## ⚡ Quick Start
 
@@ -106,28 +99,53 @@ ADA: I'll check that for you.
 ADA: Your home directory is using 45% of available space.
 ```
 
-## 💻 Library Usage
+### Library Usage
 
-You can use ADA as a library in your own Python projects, allowing for **custom memory**, **skills**, **knowledge base**, and **persona**.
+You can use ADA as a library in your own Python projects.
 
 ```python
 from ada_agent import Agent, OpenAICompatibleProvider
 import os
-from dotenv import load_dotenv
-
-load_dotenv()
 
 # 1. Setup Provider
+# Ensure you have the API key set in your environment
+
+# --- Option A: DeepSeek (Default) ---
+api_key = os.getenv("DEEPSEEK_API_KEY")
 provider = OpenAICompatibleProvider(
-    api_key=os.getenv("DEEPSEEK_API_KEY"),
+    api_key=api_key,
     base_url="https://api.deepseek.com/v1",
     model_name="deepseek-chat"
 )
 
+# --- Option B: OpenAI ---
+# api_key = os.getenv("OPENAI_API_KEY")
+# provider = OpenAICompatibleProvider(
+#     api_key=api_key,
+#     base_url=None,
+#     model_name="gpt-4o"
+# )
+
+# --- Option C: Google Gemini ---
+# from ada_agent.core.llm.gemini_client import GeminiProvider
+# api_key = os.getenv("GEMINI_API_KEY")
+# provider = GeminiProvider(
+#     api_key=api_key, 
+#     model_name="gemini-2.0-flash-exp"
+# )
+
+# --- Option D: Grok (xAI) ---
+# api_key = os.getenv("XAI_API_KEY")
+# provider = OpenAICompatibleProvider(
+#     api_key=api_key,
+#     base_url="https://api.x.ai/v1",
+#     model_name="grok-beta"
+# )
+
 # 2. Initialize Agent
 # The agent will automatically use or create a './context' folder in the current directory.
 # You don't need to manually create folders or pass paths unless you want to customize them.
-agent = Agent(provider=provider, verbose=True)
+agent = Agent(provider=provider)
 
 # 3. Chat
 response = agent.chat("What can you do?")
