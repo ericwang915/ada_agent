@@ -167,13 +167,6 @@ response = agent.chat("How long does it take to get there?")
 print(response)
 ```
 
-## 🎬 Demos
-
-Check the `examples/` directory for ready-to-run scripts:
-
-1.  **Full Demo**: `examples/demo.py`
-    *   Demonstrates RAG (Knowledge), Custom Memory, Skills, and Persona configuration.
-
 ## 🧩 Architecture
 
 ```mermaid
