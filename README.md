@@ -74,17 +74,10 @@ The demo scripts will automatically initialize a default `context` (skills, memo
 
 The agent requires an API key. You can provide this in two ways:
 
-1.  **Environment Variables** (Recommended):
-    ```bash
-    export DEEPSEEK_API_KEY="sk-..."
-    ```
-2.  **.env File**: The agent will essentially create a template `.env` file for you on first run if you wish to use it, but you are free to set variables in your shell instead.
-
-Supported Variables:
-*   `DEEPSEEK_API_KEY`
-*   `OPENAI_API_KEY`
-*   `GEMINI_API_KEY`
-*   `XAI_API_KEY` (Grok)
+**Environment Variables** (Recommended):
+```bash
+export DEEPSEEK_API_KEY="sk-..."
+```
 
 ## ⚡ Quick Start
 
