@@ -170,6 +170,20 @@ response = agent.chat("How long does it take to get there?")
 print(response)
 ```
 
+## 📁 Customizing Your Agent
+
+After running the agent (or initializing it), a `context/` directory is created in your project root. You can fully customize the agent by modifying this folder:
+
+*   **`context/skills/`**: Add new capabilities.
+    *   Create a new folder for your skill (e.g., `my_skill`).
+    *   Add a `SKILL.md` file with instructions and tool definitions.
+*   **`context/knowledge/`**: Add domain knowledge for RAG.
+    *   Simply drop `.txt` or `.md` files here. The agent will index them to answer questions based on your specific documents.
+*   **`context/memory/`**: Persistent memory storage.
+    *   `memory.json` contains the agent's long-term recall.
+*   **`context/persona/`**: Define the agent's personality.
+    *   Add text files to describe who the agent is and how it should behave.
+
 ## 🧩 Architecture
 
 ```mermaid
