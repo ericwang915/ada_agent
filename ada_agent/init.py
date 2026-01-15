@@ -69,5 +69,5 @@ def init(project_path="."):
     print("1. Edit .env to set your API Key.")
     print("2. Run your agent script:\n")
     print("from ada_agent import Agent")
-    print("from dotenv import load_dotenv; load_dotenv()")
-    print("agent = Agent(..., knowledge_path='./context/knowledge', memory_path='./context/memory/memory.json', skills_dirs=['./context/skills'])")
+    print("# Ensure configured API_KEY is set in environment")
+    print("agent = Agent(provider=provider)")
