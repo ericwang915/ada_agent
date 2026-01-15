@@ -1,5 +1,6 @@
 import subprocess
 import os
+import sys
 import json
 
 def run_command(command: str) -> str:
@@ -10,13 +11,14 @@ def run_command(command: str) -> str:
     try:
         # Check for venv and update PATH to prioritize it
         env = os.environ.copy()
-        venv_path = os.path.join(os.getcwd(), "venv")
-        if os.path.exists(venv_path):
-            # Prepend venv/bin to PATH
-            venv_bin = os.path.join(venv_path, "bin")
-            env["PATH"] = f"{venv_bin}{os.pathsep}{env.get('PATH', '')}"
-            # Also set VIRTUAL_ENV legacy variable just in case
-            env["VIRTUAL_ENV"] = venv_path
+        
+        # Use the current python interpreter's directory to ensure we stay in the same environment
+        current_python_dir = os.path.dirname(sys.executable)
+        env["PATH"] = f"{current_python_dir}{os.pathsep}{env.get('PATH', '')}"
+        
+        # Also set VIRTUAL_ENV legacy variable if we are in a venv
+        if sys.prefix != sys.base_prefix:
+             env["VIRTUAL_ENV"] = sys.prefix
         
         # Using shell=True to allow complex commands
         result = subprocess.run(
