@@ -30,15 +30,16 @@ class MemoryManager:
 
     def recall(self, query: str) -> str:
         """
-        Searches memory for the query.
+        Retrieves ALL memories (no simplified search).
+        The 'query' parameter is currently ignored to support full context loading.
         """
-        results = self.storage.search(query)
-        if not results:
-            return "No relevant memories found."
+        all_memories = self.storage.list_all()
+        if not all_memories:
+            return "No memories found."
         
         # Format results
         output = []
-        for k, v in results:
+        for k, v in all_memories.items():
             output.append(f"- {k}: {v}")
         return "\n".join(output)
 
