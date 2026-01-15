@@ -42,25 +42,51 @@ pip install git+https://github.com/ericwang915/ada_agent.git
    pip install -e .
    ```
 
-## 🛠️ Configuration
+## Examples
 
-Copy the example environment file and configure your API keys:
+The `examples/` directory contains demo scripts for different LLM providers:
+
+*   **DeepSeek**: `examples/demo_deepseek.py`
+*   **OpenAI**: `examples/demo_openai.py`
+*   **Google Gemini**: `examples/demo_gemini.py`
+*   **Grok (xAI)**: `examples/demo_grok.py`
+
+### Running a Demo
+
+1.  Make sure you have set the appropriate API key in your `.env` file (created automatically by the agent or manually).
+2.  Run the desired script:
 
 ```bash
-cp examples/.env.example .env
+# Example for DeepSeek
+python examples/demo_deepseek.py
+
+# Example for OpenAI
+python examples/demo_openai.py
 ```
 
-Edit `.env`:
+The demo scripts will automatically initialize a default `context` (skills, memory, knowledge) in your current directory if one doesn't exist.
+
+## 🛠️ Configuration
+
+When you first run the agent (or one of the demo scripts), it will automatically create a `.env` file in your current directory if one doesn't exist.
+
+Open `.env` and fill in your API key:
 
 ```ini
-# Choose your provider: deepseek, gemini, grok, claude
-LLM_PROVIDER=deepseek
+# ADA Agent Configuration
+# -----------------------
 
-# Add keys for your chosen provider(s)
-DEEPSEEK_API_KEY=sk-...
-GEMINI_API_KEY=...
-GROK_API_KEY=...
-ANTHROPIC_API_KEY=sk-ant...
+# LLM Provider Configuration
+# Uncomment and fill in the key for your chosen provider
+
+# OpenAI
+# OPENAI_API_KEY=sk-your-openai-key-here
+
+# DeepSeek
+DEEPSEEK_API_KEY=sk-your-deepseek-key-here
+
+# Google Gemini
+# GEMINI_API_KEY=your-gemini-key-here
 ```
 
 ## ⚡ Quick Start
@@ -87,40 +113,24 @@ You can use ADA as a library in your own Python projects, allowing for **custom 
 ```python
 from ada_agent import Agent, OpenAICompatibleProvider
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # 1. Setup Provider
 provider = OpenAICompatibleProvider(
-    api_key="sk-...",
+    api_key=os.getenv("DEEPSEEK_API_KEY"),
     base_url="https://api.deepseek.com/v1",
     model_name="deepseek-chat"
 )
 
-# 2. Define Paths and Initialize if Needed
-base_dir = os.path.dirname(os.path.abspath(__file__))
-context_dir = os.path.join(base_dir, "context")
+# 2. Initialize Agent
+# The agent will automatically use or create a './context' folder in the current directory.
+# You don't need to manually create folders or pass paths unless you want to customize them.
+agent = Agent(provider=provider, verbose=True)
 
-if not os.path.exists(context_dir):
-    from ada_agent import init
-    init(base_dir)
-
-# Assumes you have these folders (created by init check above)
-knowledge_path = os.path.join(context_dir, "knowledge")
-memory_path = os.path.join(context_dir, "memory", "memory.json")
-skills_path = os.path.join(context_dir, "skills")
-persona_path = os.path.join(context_dir, "persona")
-
-# 3. Initialize Agent with Custom Paths
-agent = Agent(
-    provider=provider,
-    knowledge_path=knowledge_path,
-    memory_path=memory_path,
-    skills_dirs=[skills_path],
-    persona_path=persona_path,
-    verbose=True
-)
-
-# 4. Chat
-response = agent.chat("What is the capital of Mars provided in the knowledge base?")
+# 3. Chat
+response = agent.chat("What can you do?")
 print(response)
 ```
 
